@@ -1,8 +1,6 @@
 import 'dart:io';
 
-String inputFileName = "input.txt";
-
-List<List<int>> getData() {
+List<List<int>> getData([String inputFileName = "input.txt"]) {
   List<String> lines = File([Directory.current.path, inputFileName].join('\\')).readAsLinesSync();
   List<List<int>> data = [];
   for (String line in lines) {
@@ -11,20 +9,24 @@ List<List<int>> getData() {
   return data;
 }
 
+bool isValid(List<int> report) {
+  bool isIncreasing = (report[0] - report[1]) < 0;
+  bool valid = true;
+  for (int i = 0; i < report.length - 1; i++) {
+    valid &= (
+      (report[i] - report[i + 1]).abs() <= 3 &&
+      (report[i] - report[i + 1]).abs() > 0 &&
+      ((report[i] - report[i + 1] < 0) == isIncreasing)
+    );
+  }
+  return valid;
+}
+
 void main() {
   List<List<int>> data = getData();
   int total = 0;
-  for (List<int> line in data) {
-    bool isIncreasing = (line[0] - line[1]) < 0;
-    bool isValid = true;
-    for (int i = 0; i < line.length - 1; i++) {
-      isValid &= (
-        (line[i] - line[i + 1]).abs() <= 3 &&
-        (line[i] - line[i + 1]).abs() > 0 &&
-        ((line[i] - line[i + 1] < 0) == isIncreasing)
-      );
-    }
-    if (isValid) {
+  for (List<int> report in data) {
+    if (isValid(report)) {
       total += 1;
     }
   }
