@@ -1,7 +1,7 @@
 import 'dart:io';
 
 List<String> getData([String inputFileName = "input.txt"]) {
-  return File([Directory.current.path, inputFileName].join('\\')).readAsLinesSync();
+  return File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsLinesSync();
 }
 
 String word = "XMAS";

@@ -1,7 +1,9 @@
 import 'dart:io';
 
 List<List<int>> getData([String inputFileName = "input.txt"]) {
-  List<String> lines = File([Directory.current.path, inputFileName].join('\\')).readAsLinesSync();
+  List<String> lines = File(
+    [Directory.current.path, inputFileName].join(Platform.pathSeparator)
+  ).readAsLinesSync();
   List<List<int>> data = [];
   for (String line in lines) {
     data.add(line.split(' ').map((x) => int.parse(x)).toList());

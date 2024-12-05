@@ -1,7 +1,7 @@
 import 'dart:io';
 
 String getData([String inputFileName = "input.txt"]) =>
-  File([Directory.current.path, inputFileName].join('\\')).readAsStringSync()
+  File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsStringSync()
 ;
 
 void main() {

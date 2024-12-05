@@ -3,7 +3,7 @@ import 'dart:io';
 String inputFileName = "input.txt";
 
 List<List<int>> getData() {
-  List<String> lines = File([Directory.current.path, inputFileName].join('\\')).readAsLinesSync();
+  List<String> lines = File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsLinesSync();
   List<List<int>> data = [[], []];
   for (String line in lines) {
     List<int> lr = line.split('   ').map((String item) => int.parse(item)).toList();
