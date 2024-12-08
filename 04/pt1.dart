@@ -1,19 +1,11 @@
 import 'dart:io';
+import '../util.dart';
 
 List<String> getData([String inputFileName = "input.txt"]) {
   return File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsLinesSync();
 }
 
 String word = "XMAS";
-
-class Vector {
-  int row;
-  int col;
-  Vector(this.row, this.col);
-  
-  Vector operator +(Vector other) => Vector(row + other.row, col + other.col);
-  Vector operator *(int other) => Vector(row * other, col * other);
-}
 
 void main() {
   List<String> data = getData();
