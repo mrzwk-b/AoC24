@@ -1,14 +1,9 @@
-import 'dart:io';
 import '../util.dart';
-
-List<String> getData([String inputFileName = "input.txt"]) {
-  return File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsLinesSync();
-}
 
 String word = "XMAS";
 
 void main() {
-  List<String> data = getData();
+  List<String> data = readInput();
   int total = 0;
 
   int height = data.length;

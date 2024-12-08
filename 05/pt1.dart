@@ -1,4 +1,4 @@
-import 'dart:io';
+import '../util.dart';
 
 class Data {
   Map<int, Set<int>> rules;
@@ -7,9 +7,7 @@ class Data {
 }
 
 Data getData([String inputFileName = "input.txt"]) {
-  List<String> lines =  File(
-    [Directory.current.path, inputFileName].join(Platform.pathSeparator)
-  ).readAsLinesSync();
+  List<String> lines =  readInput();
 
   Map<int, Set<int>> rules = {};
   for (String rule in lines.sublist(0, lines.indexOf(""))) {

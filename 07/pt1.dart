@@ -1,4 +1,4 @@
-import 'dart:io';
+import '../util.dart';
 
 class Equation {
   int result;
@@ -7,7 +7,7 @@ class Equation {
 }
 
 List<Equation> getData([String inputFileName = "input.txt"]) =>
-  File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsLinesSync().map(
+  readInput().map(
     (String line) => Equation(
       int.parse(line.split(':')[0]), 
       line.split(' ').sublist(1).map((String number) => int.parse(number)).toList()

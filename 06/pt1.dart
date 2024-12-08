@@ -1,4 +1,4 @@
-import 'dart:io';
+import '../util.dart';
 
 enum MapElement {
   Empty, Obstacle, Visited, 
@@ -6,7 +6,7 @@ enum MapElement {
 }
 
 List<List<MapElement>> getData([String inputFileName = "input.txt"]) =>
-  File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsLinesSync().map(
+  readInput().map(
     (String line) => line.split("").map(
       (String char) => 
         char == '#' ? MapElement.Obstacle :

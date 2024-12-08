@@ -1,11 +1,11 @@
-import 'pt1.dart';
+import '../util.dart';
 
 Set<String> corners = {'S', 'M'};
 
 bool mas(String a, String b) => corners.contains(a) && corners.contains(b) && a != b;
 
 void main() {
-  List<String> data = getData();
+  List<String> data = readInput();
   int total = 0;
 
   int height = data.length;

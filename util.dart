@@ -1,3 +1,9 @@
+import 'dart:io';
+
+List<String> readInput([String inputFileName = "input.txt"]) =>
+  File([Directory.current.path, inputFileName].join(Platform.pathSeparator)).readAsLinesSync()
+;
+
 class Vector {
   int row;
   int col;
