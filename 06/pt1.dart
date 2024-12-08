@@ -37,11 +37,6 @@ MapElement turnRight(MapElement facing) =>
   (){throw ArgumentError("turnRight doesn't accept ${facing}");}()
 ;
 
-bool onMap(int row, int col, List<List> map) => 
-  row >= 0 && row < map.length &&
-  col >= 0 && col < map[0].length
-;
-
 List<int> guardStart(List<List<MapElement>> map) {
   int guardRow = map.indexWhere((List<MapElement> line) => line.contains(MapElement.Up));
   return [guardRow, map[guardRow].indexWhere((MapElement tile) => tile == MapElement.Up)];

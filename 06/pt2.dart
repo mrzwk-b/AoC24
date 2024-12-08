@@ -1,3 +1,4 @@
+import '../util.dart';
 import 'pt1.dart';
 
 bool hasLoop(List<List<MapElement>> map) {
