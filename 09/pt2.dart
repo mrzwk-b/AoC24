@@ -11,7 +11,7 @@ int binarySearch(List<int> list, int target) =>
     binarySearch(list.sublist(0, list.length ~/ 2), target) 
   :
   list[list.length ~/ 2] < target ? 
-    (list.length ~/ 2) + 
+    (list.length ~/ 2) + 1 +
     binarySearch(list.sublist((list.length ~/ 2) + 1), target)
   :
     list.length ~/ 2
@@ -27,10 +27,14 @@ class SpaceTracker {
       i = scanFor(tracked, i, (item) => item != null);
       ends.add(i);
     }
+    if (starts.last == ends.last) {
+      starts.removeLast();
+      ends.removeLast();
+    }
   }
 
-  int findSlotStart(int size) {
-    for (int i = 0; i < starts.length; i++) {
+  int findSlotStart(int size, int latest) {
+    for (int i = 0; i < starts.length && starts[i] <= latest; i++) {
       if (ends[i] - starts[i] >= size) {
         return starts[i];
       }
@@ -40,23 +44,27 @@ class SpaceTracker {
 
   void reflectMove(int oldStart, int newStart, int size) {
     int index;
-    // cut down length of empty block that began at oldStart, deleting if necessary
+    // insert or expand block at oldStart
     index = binarySearch(starts, oldStart);
-    if (oldStart + size == ends[index]) {
+    if (index == starts.length || oldStart + size != starts[index]) {
+      starts.insert(index, oldStart);
+      ends.insert(index, oldStart + size);  
+    }
+    else {
+      starts[index] = oldStart;
+    }
+    if (index != 0 && starts[index] == ends[index - 1]) {
+      starts.removeAt(index);
+      ends.removeAt(index - 1);
+    }
+    // delete or shrink block at newStart
+    index = binarySearch(starts, newStart);
+    if (newStart + size == ends[index]) {
       starts.removeAt(index);
       ends.removeAt(index);
     }
     else {
       starts[index] += size;
-    }
-    // insert newStart, connects to what's there if possible
-    index = binarySearch(starts, newStart);
-    if (newStart + size == starts[index]) {
-      starts[index] = newStart;
-    }
-    else {
-      starts.insert(index, newStart);
-      ends.insert(index, newStart + size);
     }
   }
 }
@@ -71,7 +79,6 @@ List<int?> reorganizeMemoryNoFrag(List<int?> original) {
   List<int?> memory = List.from(original);
   SpaceTracker spaceTracker = SpaceTracker(memory);
 
-
   for (int index = memory.length - 1; index > 0; ) {
     // find file start and end
     int fileEnd = filter(
@@ -79,17 +86,17 @@ List<int?> reorganizeMemoryNoFrag(List<int?> original) {
       (value) => inRange(value, 0, memory.length),
       memory.length
     );
+    int fileNumber = memory[fileEnd - 1]!;
     int fileStart = filter(
-      scanFor(memory, fileEnd - 1, (item) => item == null, reversed: true) + 1,
+      scanFor(memory, fileEnd - 1, (item) => item != fileNumber, reversed: true) + 1,
       (value) => inRange(value, 0, memory.length),
       0
     );
     int size = fileEnd - fileStart;
     // find adequate empty space
-    int newStart = spaceTracker.findSlotStart(size);
+    int newStart = spaceTracker.findSlotStart(size, fileStart);
     // move the file
     if (newStart != -1) {
-      int fileNumber = memory[fileStart]!;
       for (int i = newStart; i < newStart + size; i++) {
         memory[i] = fileNumber;
       }
@@ -106,5 +113,5 @@ List<int?> reorganizeMemoryNoFrag(List<int?> original) {
 }
 
 void main() {
-  print(getChecksum(reorganizeMemoryNoFrag(getMemory(getData("test.txt")))));
+  print(getChecksum(reorganizeMemoryNoFrag(getMemory(getData()))));
 }
