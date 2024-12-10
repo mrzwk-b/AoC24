@@ -23,7 +23,13 @@ List<int?> getMemory(String diskMap) {
 
 int scanFor<T>(List<T> items, int start, bool Function(T) condition, {bool reversed = false}) {
   int index = start;
-  for (; !condition(items[index]); reversed ? index-- : index++) {}
+  for (
+    ;
+    (index >= items.length && !reversed) || (index == 0 && reversed) ? false : 
+      !condition(items[index])
+    ;
+    reversed ? index-- : index++
+  ) {}
   return index;
 }
 
