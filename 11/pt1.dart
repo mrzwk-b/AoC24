@@ -58,20 +58,18 @@ class Stone {
     }
   }
 
-  List<Stone> evolve() {
-    return
-      (toInt() == 0) ? [
-        Stone.fromInt(1)
-      ]: 
-      (toString().length % 2 == 0) ? [
-        Stone.fromStr(toString().substring(0, toString().length ~/ 2)),
-        Stone.fromStr(toString().substring(toString().length ~/ 2))  
-      ]:
-      [
-        Stone.fromInt(toInt() * 2024)
-      ]
-    ;
-  }
+  List<Stone> evolve() =>
+    (toInt() == 0) ? [
+      Stone.fromInt(1)
+    ]: 
+    (toString().length % 2 == 0) ? [
+      Stone.fromStr(toString().substring(0, toString().length ~/ 2)),
+      Stone.fromStr(toString().substring(toString().length ~/ 2))  
+    ]:
+    [
+      Stone.fromInt(toInt() * 2024)
+    ]
+  ;
 
   @override String toString() => 
     strValue ??
