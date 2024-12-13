@@ -28,3 +28,7 @@ class Vector {
 
   @override String toString() => "<$row, $col>";
 }
+List<Vector> orthogonals = [
+  Vector(-1, 0), Vector(1, 0),
+  Vector(0, -1), Vector(0, 1)
+];

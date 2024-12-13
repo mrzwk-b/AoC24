@@ -8,16 +8,11 @@ List<List<int>> getData() =>
   ).toList()
 ;
 
-List<Vector> directions = [
-  Vector(-1, 0), Vector(1, 0),
-  Vector(0, -1), Vector(0, 1)
-];
-
 List<List<Vector>> getTrails(Vector source, List<List<int>> trailMap, [elevation = 0]) {
   List<List<Vector>> trails = [];
   if (trailMap[source.row][source.col] == 9) trails.add([source]);
   else {
-    for (Vector dir in directions) {
+    for (Vector dir in orthogonals) {
       Vector next = source + dir;
       if (
         onMap(next.row, next.col, trailMap) && 
