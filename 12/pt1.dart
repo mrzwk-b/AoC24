@@ -4,32 +4,72 @@ List<List<String>> getData() =>
   readInput().map((line) => line.split("")).toList()
 ;
 
+List<List<bool>> falseFill(int height, int width) => List.filled(height, List.filled(width, false));
+
 class Region {
-  List<List<bool>> elements;
-  Region(int height, int width):
-    elements = List.filled(height, List.filled(width, false))
-  ;
+  List<List<bool>> squares;
+  Region(int height, int width): squares = falseFill(height, width);
 
   void add(int row, int col) {
-    elements[row][col] = true;
+    squares[row][col] = true;
   }
   
   int get area => 
-    elements.map(
+    squares.map(
       (line) => line.map(
-        (tile) => tile ? 1:0
+        (square) => square ? 1:0
       ).reduce((a,b)=>a+b)
     ).reduce((a,b)=>a+b)
   ;
-  int get perimeter => 
-    0 // TODO
-  ;
+  int get perimeter {
+    int total = 0;
+    for (int row = 0; row < squares.length; row++) {
+      for (int col = 0; col < squares[0].length; col++) {
+        Vector currentSquare = Vector(row, col);
+        total += orthogonals.map((dir) {
+          Vector next = currentSquare + dir;
+          return (onMap(next.row, next.col, squares) && !squares[next.row][next.col]) ? 1:0;
+        }).reduce((a,b)=>a+b);
+      }
+    }
+    return total;
+  }
 }
 
-void scanForRegion<T>(Region region, List<List<T>> world, Vector next) {
+/// DFS on [world] that adds matching squares to [region]
+void scanIntoRegion(Region region, List<List> world, Vector locus) {
+  region.add(locus.row, locus.col);
+  for (Vector dir in orthogonals) {
+    Vector next = locus + dir;
+    if (
+      onMap(next.row, next.col, region.squares) &&
+      !region.squares[next.row][next.col] &&
+      world[locus.row][locus.col] == world[next.row][next.col]
+    ) {
+      scanIntoRegion(region, world, next);
+    }
+  }
+}
 
+List<Region> getAllRegions(List<List<String>> world) {
+  List<Region> regions = [];
+  List<List<bool>> mapped = falseFill(world.length, world[0].length);
+  for (int row = 0; row < world.length; row++) {
+    for (int col = 0; col < world[0].length; col++) {
+      if (!mapped[row][col]) {
+        Region region = Region(world.length, world[0].length);
+        regions.add(region);
+        scanIntoRegion(region, world, Vector(row, col));
+      }
+    }
+  }
+  return regions;
 }
 
 void main() {
-
+  print(
+    getAllRegions(getData())
+    .map((region) => region.area * region.perimeter)
+    .reduce((a,b)=>a+b)
+  );
 }
