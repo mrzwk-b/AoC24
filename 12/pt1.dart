@@ -4,7 +4,10 @@ List<List<String>> getData() =>
   readInput().map((line) => line.split("")).toList()
 ;
 
-List<List<bool>> falseFill(int height, int width) => List.filled(height, List.filled(width, false));
+List<List<bool>> falseFill(int height, int width) => [
+  for (int row = 0; row < height; row++) 
+    [for (int col = 0; col < width; col++) false]
+];
 
 class Region {
   List<List<bool>> squares;
@@ -26,10 +29,12 @@ class Region {
     for (int row = 0; row < squares.length; row++) {
       for (int col = 0; col < squares[0].length; col++) {
         Vector currentSquare = Vector(row, col);
-        total += orthogonals.map((dir) {
-          Vector next = currentSquare + dir;
-          return (onMap(next.row, next.col, squares) && !squares[next.row][next.col]) ? 1:0;
-        }).reduce((a,b)=>a+b);
+        if (squares[currentSquare.row][currentSquare.col]) {
+          total += orthogonals.map((dir) {
+            Vector next = currentSquare + dir;
+            return (onMap(next.row, next.col, squares) && squares[next.row][next.col]) ? 0:1;
+          }).reduce((a,b)=>a+b);
+        }
       }
     }
     return total;
@@ -60,13 +65,18 @@ List<Region> getAllRegions(List<List<String>> world) {
         Region region = Region(world.length, world[0].length);
         regions.add(region);
         scanIntoRegion(region, world, Vector(row, col));
+        for (int i = 0; i < mapped.length; i++) {
+          for (int j = 0; j < mapped[0].length; j++) {
+            mapped[i][j] |= region.squares[i][j];
+          }
+        }
       }
     }
   }
   return regions;
 }
 
-void main() {
+void main() {  
   print(
     getAllRegions(getData())
     .map((region) => region.area * region.perimeter)
