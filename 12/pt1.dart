@@ -1,7 +1,7 @@
 import '../util.dart';
 
 List<List<String>> getData() =>
-  readInput().map((line) => line.split("")).toList()
+  readInput("test.txt").map((line) => line.split("")).toList()
 ;
 
 List<List<bool>> falseFill(int height, int width) => [
