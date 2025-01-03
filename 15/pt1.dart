@@ -67,8 +67,8 @@ Vector makeMove(Vector robotPosition, Vector direction, List<List<Item>> map) {
 
 int sumGpsCoordinates(List<List<Item>> map) {
   int total = 0;
-  for (int row = 1; row < map.length; row++) {
-    for (int col = 1; col < map[0].length; col++) {
+  for (int row = 1; row < map.length - 1; row++) {
+    for (int col = 1; col < map[0].length - 1; col++) {
       if (map[row][col] == Item.Box) {
         total += (100 * row) + col;
       }
@@ -79,9 +79,8 @@ int sumGpsCoordinates(List<List<Item>> map) {
 
 void main() {
   Data data = getData();
-  Vector robotPosition = data.robotPosition;
   for (Vector move in data.moves) {
-    robotPosition = makeMove(robotPosition, move, data.map);
+    data.robotPosition = makeMove(data.robotPosition, move, data.map);
   }
   print(sumGpsCoordinates(data.map));
 }
