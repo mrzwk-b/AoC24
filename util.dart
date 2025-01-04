@@ -61,3 +61,20 @@ List<Vector> orthogonals = [
   Vector(-1, 0), Vector(1, 0),
   Vector(0, -1), Vector(0, 1)
 ];
+
+/// doesn't behave like normal binary search in that
+/// if [target] doesn't exist it still returns
+/// the index at which it should be inserted
+int binarySearch(List<int> list, int target) =>
+  list.isEmpty ? 
+    0
+  :
+  list[list.length ~/ 2] > target ? 
+    binarySearch(list.sublist(0, list.length ~/ 2), target) 
+  :
+  list[list.length ~/ 2] < target ? 
+    (list.length ~/ 2) + 1 +
+    binarySearch(list.sublist((list.length ~/ 2) + 1), target)
+  :
+    list.length ~/ 2
+;
