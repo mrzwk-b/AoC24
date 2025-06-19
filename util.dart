@@ -138,3 +138,14 @@ class PriorityQueue<T> {
 
   @override String toString() => heap.toString();
 }
+
+int bitwiseOperation(bool Function(bool, bool) operation, int bits, int left, int right) {
+  int output = 0;
+  for (int i = 0; i < bits; i++) {
+    output |= (operation(
+      (left >> i) % 2 != 0,
+      (right >> i) % 2 != 0
+    ) ? 1 : 0) << i;
+  }
+  return output;
+}
