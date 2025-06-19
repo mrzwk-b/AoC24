@@ -78,3 +78,63 @@ int binarySearch(List<int> list, int target) =>
   :
     list.length ~/ 2
 ;
+
+class PriorityQueue<T> {
+  List<T> heap;
+  Comparator<T> compare;
+  PriorityQueue.empty(this.compare): heap = [];
+  PriorityQueue.from(Iterable<T> items, this.compare): heap = [] {items.forEach(insert);}
+
+  int parent(int index) => (index - 1) ~/ 2;
+  int leftChild(int index) => (index * 2) + 1;
+  int rightChild(int index) => (index * 2) + 2;
+  int? priorChild(int index) {
+    int left = leftChild(index);
+    int right = rightChild(index);    
+    return 
+      (!(left < heap.length || right < heap.length)) ?
+        null
+      :
+      (!(left < heap.length)) ?
+        right
+      :
+      (!(right < heap.length)) ?
+        left
+      :
+        compare(heap[left], heap[right]) == -1 ? left : right
+    ;
+  }
+  
+  void swap(int i, int j) {
+    T temp = heap[i];
+    heap[i] = heap[j];
+    heap[j] = temp;
+  }
+
+  void insert(T item) {
+    heap.add(item);
+    // sift up
+    for (int index = heap.length - 1; index > 0; index = parent(index)) {
+      if (compare(heap[index], heap[parent(index)]) == -1) {
+        swap(index, parent(index));
+      }
+      else break;
+    }
+  }
+
+  T remove() {
+    T value = heap.removeAt(0);
+    if (heap.isEmpty) return value;
+    heap.insert(0, heap.removeLast());
+    // sift down
+    for (int? index = 0; priorChild(index!) != null && index < heap.length; index = priorChild(index)) {
+      if (compare(heap[index], heap[priorChild(index)!]) != -1) {
+        swap(index, priorChild(index)!);
+      }
+      else break;
+    }
+    return value;
+  }
+
+  @override String toString() => heap.toString();
+}
